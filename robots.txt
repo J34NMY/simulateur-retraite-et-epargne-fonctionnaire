@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://simulateur-citoyen.fr/simulateur-retraite-et-epargne-fonctionnaire/sitemap.xml
