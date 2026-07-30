@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulateur de Retraite et Épargne – Fonctionnaire d'État, début de carrière</title>
+  <meta name="description" content="Simulateur gratuit de retraite et d'épargne pour fonctionnaire d'État en début de carrière. Pension SRE, comparateur CTO/PEA/PER, 100% local et gratuit.">
+  <link rel="canonical" href="https://simulateur-citoyen.fr/simulateur-retraite-et-epargne-fonctionnaire/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://simulateur-citoyen.fr/simulateur-retraite-et-epargne-fonctionnaire/">
+  <meta property="og:title" content="Simulateur de Retraite et Épargne – Fonctionnaire">
+  <meta property="og:description" content="Projetez votre pension SRE future et comparez CTO, PEA et PER pour épargner en complément. Gratuit, 100% local.">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="Simulateurs Citoyens">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Simulateur de Retraite et Épargne – Fonctionnaire">
+  <meta name="twitter:description" content="Projetez votre pension SRE future et comparez CTO, PEA et PER pour épargner en complément. Gratuit, 100% local.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Simulateur de Retraite et Épargne – Fonctionnaire",
+    "url": "https://simulateur-citoyen.fr/simulateur-retraite-et-epargne-fonctionnaire/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web",
+    "description": "Simulateur gratuit de retraite et d'épargne pour fonctionnaire d'État en début de carrière — pension SRE et comparateur CTO/PEA/PER.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+    "publisher": { "@type": "Person", "name": "J34NMY" }
+  }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:#1B3A5C; --navy-light:#2A5280; --green:#15803d; --green-light:#f0fdf4;
+      --cream:#F7F6F3; --gold:#C9A84C; --purple:#7c3aed; --cyan:#0891b2;
+      --slate:#6B7280; --white:#FFFFFF; --border:#E5E7EB;
+    }
+    body { font-family:'Inter',sans-serif; background:var(--cream); color:var(--navy); min-height:100vh; overflow-x:hidden; }
+    .hero { background:var(--navy); padding:72px 24px 64px; text-align:center; position:relative; overflow:hidden; }
+    .hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 70% 40%, rgba(201,168,76,.12) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(8,145,178,.10) 0%, transparent 50%); pointer-events:none; }
+    .hero-eyebrow { font-size:11px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:18px; }
+    .hero h1 { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,5vw,3.2rem); font-weight:700; color:var(--white); line-height:1.18; max-width:720px; margin:0 auto 16px; }
+    .hero h1 em { font-style:italic; color:var(--gold); }
+    .hero-sub { font-size:1rem; font-weight:300; color:rgba(255,255,255,.72); max-width:560px; margin:0 auto 16px; line-height:1.65; }
+    .hero-detail { font-size:.88rem; color:rgba(255,255,255,.6); max-width:580px; margin:0 auto 44px; line-height:1.7; }
+    .hero-detail strong { color:rgba(255,255,255,.85); font-weight:500; }
+    .btn-group { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }
+    .btn { display:inline-flex; align-items:center; gap:10px; padding:14px 28px; border-radius:6px; font-family:'Inter',sans-serif; font-size:.93rem; font-weight:600; text-decoration:none; cursor:pointer; border:none; transition:transform .15s,box-shadow .15s,opacity .15s; }
+    .btn:hover { transform:translateY(-2px); opacity:.93; }
+    .btn-purple { background:var(--purple); color:#fff; box-shadow:0 4px 18px rgba(124,58,237,.35); }
+    .btn-outline { background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,.4); }
+    .btn-outline:hover { border-color:rgba(255,255,255,.8); }
+    .btn-cyan { background:var(--cyan); color:#fff; }
+    .strip { background:var(--white); border-bottom:1px solid var(--border); padding:26px 24px; }
+    .strip-inner { max-width:820px; margin:0 auto; display:flex; flex-wrap:wrap; gap:0; justify-content:space-around; align-items:center; }
+    .stat { text-align:center; padding:10px 20px; }
+    .stat-num { font-family:'Playfair Display',serif; font-size:1.9rem; font-weight:700; color:var(--navy); line-height:1; display:block; }
+    .stat-num span { color:var(--gold); }
+    .stat-label { font-size:.76rem; font-weight:500; color:var(--slate); text-transform:uppercase; letter-spacing:.08em; margin-top:4px; display:block; }
+    .strip-div { width:1px; height:38px; background:var(--border); }
+    .perimetre { max-width:900px; margin:40px auto 0; padding:0 24px; }
+    .perimetre-inner { background:#eff6ff; border-left:4px solid #2563eb; border-radius:8px; padding:18px 22px; }
+    .perimetre-inner p { font-size:.85rem; color:var(--navy); line-height:1.7; }
+    .perimetre-inner strong { color:#1d4ed8; }
+    .precaution { max-width:900px; margin:20px auto 0; padding:0 24px; }
+    .precaution-inner { background:#fff7ed; border:2px solid #f59e0b; border-radius:8px; padding:18px 22px; }
+    .precaution-inner p { font-size:.85rem; color:#7c2d12; line-height:1.6; }
+    .precaution-inner .titre { font-weight:700; color:#92400e; margin-bottom:6px; }
+    .simulateurs { max-width:900px; margin:48px auto; padding:0 24px; }
+    .simulateurs h2 { font-family:'Playfair Display',serif; font-size:1.5rem; color:var(--navy); margin-bottom:28px; text-align:center; }
+    .sims-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    .sim-card { background:var(--white); border:1px solid var(--border); border-radius:12px; padding:28px 24px; position:relative; overflow:hidden; display:flex; flex-direction:column; }
+    .sim-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:4px; }
+    .sim-card.guide::before { background:var(--purple); }
+    .sim-card.expert::before { background:var(--cyan); }
+    .sim-badge { display:inline-block; font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:3px 10px; border-radius:20px; margin-bottom:10px; }
+    .sim-card.guide .sim-badge { background:#ede9fe; color:var(--purple); }
+    .sim-card.expert .sim-badge { background:#ecfeff; color:var(--cyan); }
+    .sim-card h3 { font-family:'Playfair Display',serif; font-size:1.15rem; color:var(--navy); margin-bottom:6px; }
+    .sim-card .sim-sub { font-size:.8rem; color:var(--slate); margin-bottom:16px; line-height:1.5; }
+    .sim-features { list-style:none; margin-bottom:20px; flex:1; }
+    .sim-features li { font-size:.83rem; color:var(--slate); padding:3px 0; display:flex; align-items:flex-start; gap:7px; }
+    .sim-features li::before { content:'✓'; color:var(--cyan); font-weight:700; flex-shrink:0; margin-top:1px; }
+    .sim-card.guide .sim-features li::before { color:var(--purple); }
+    .sim-card .cadre { background:var(--cream); border-radius:6px; padding:8px 12px; font-size:.75rem; color:var(--slate); margin-bottom:16px; }
+    .sim-card .cadre strong { color:var(--navy); }
+    .sim-card-footer { margin-top:auto; }
+    .features { max-width:900px; margin:0 auto 60px; padding:0 24px; }
+    .features h2 { font-family:'Playfair Display',serif; font-size:1.5rem; color:var(--navy); margin-bottom:28px; text-align:center; }
+    .features-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; }
+    .feature-card { background:var(--white); border:1px solid var(--border); border-radius:10px; padding:22px 20px; position:relative; overflow:hidden; }
+    .feature-card::after { content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--cyan); }
+    .feature-icon { font-size:1.4rem; margin-bottom:10px; display:block; }
+    .feature-title { font-weight:600; font-size:.88rem; color:var(--navy); margin-bottom:6px; }
+    .feature-desc { font-size:.78rem; color:var(--slate); line-height:1.5; }
+    footer { background:var(--cream); border-top:1px solid var(--border); padding:26px 24px; text-align:center; }
+    footer p { font-size:.78rem; color:var(--slate); line-height:1.7; }
+    footer a { color:var(--navy); text-decoration:none; font-weight:500; }
+    footer a:hover { text-decoration:underline; }
+    .disclaimer { max-width:700px; margin:14px auto 0; padding:16px 20px; background:#FFF8E7; border:1px solid #F0D98A; border-radius:8px; font-size:.78rem; color:#7A6200; line-height:1.6; }
+    @media (max-width:620px) { .sims-grid { grid-template-columns:1fr; } .strip-div { display:none; } }
+  </style>
+</head>
+<body>
+
+<section class="hero">
+  <p class="hero-eyebrow">Outil open source · Gratuit · Sans inscription · 100% local</p>
+  <h1>Simulateur de <em>Retraite et Épargne</em> — Fonctionnaire</h1>
+  <p class="hero-sub">
+    La retraite par répartition n'offre aucun choix individuel. L'épargne par capitalisation, si.
+    Découvrez pourquoi épargner tôt change tout.
+  </p>
+  <p class="hero-detail">
+    Vous débutez votre carrière de fonctionnaire et voulez savoir quelle sera votre pension future (méthode SRE) ?
+    Vous vous demandez si le CTO, le PEA ou le PER est le plus avantageux pour épargner en complément ?
+    Ce simulateur projette votre carrière et compare vos options d'épargne, fiscalité 2026 incluse.
+    <br><strong>Simple, gratuit et 100% privé</strong> — aucune donnée ne quitte votre appareil.
+  </p>
+  <div class="btn-group">
+    <a href="mode-emploi.html" class="btn btn-outline" target="_blank">
+      <span>📖</span> Mode d'emploi
+    </a>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="strip-inner">
+    <div class="stat"><span class="stat-num">2 <span>modes</span></span><span class="stat-label">Guidé · Expert</span></div>
+    <div class="strip-div"></div>
+    <div class="stat"><span class="stat-num">3 <span>enveloppes</span></span><span class="stat-label">CTO · PEA · PER</span></div>
+    <div class="strip-div"></div>
+    <div class="stat"><span class="stat-num">100<span>%</span></span><span class="stat-label">Local — tourne dans votre navigateur</span></div>
+    <div class="strip-div"></div>
+    <div class="stat"><span class="stat-num">2026</span><span class="stat-label">Fiscalité à jour — LFSS 2026</span></div>
+  </div>
+</div>
+
+<div class="perimetre">
+  <div class="perimetre-inner">
+    <p>
+      <strong>Qui est concerné ?</strong> Les <strong>fonctionnaires d'État, catégorie sédentaire</strong>, en <strong>début de carrière</strong>.
+      Ce simulateur ne couvre <strong>pas</strong> les salariés du régime général (voir le simulateur dédié), les fonctionnaires en catégorie active, la CNRACL, ni les indépendants.
+    </p>
+  </div>
+</div>
+
+<div class="precaution">
+  <div class="precaution-inner">
+    <p class="titre">🛡️ Avant d'investir : constituez d'abord une épargne de précaution</p>
+    <p>3 à 6 mois de vos dépenses courantes, sur un support liquide et sans risque (Livret A, LDDS) — avant l'épargne de capitalisation simulée ici.</p>
+  </div>
+</div>
+
+<section class="simulateurs">
+  <h2>Les deux modes</h2>
+  <div class="sims-grid">
+
+    <div class="sim-card guide">
+      <span class="sim-badge">Assistant Guidé</span>
+      <h3>Mode Guidé</h3>
+      <p class="sim-sub">Idéal pour une première simulation — 5 étapes claires et validées</p>
+      <ul class="sim-features">
+        <li>Saisie pas à pas, une question à la fois</li>
+        <li>Projection de carrière et de pension SRE</li>
+        <li>Comparateur d'épargne CTO/PEA/PER</li>
+        <li>Réinvestissement de l'économie d'impôt du PER</li>
+        <li>Résultat clair : pension + épargne combinées</li>
+      </ul>
+      <div class="cadre"><strong>Cadre réglementaire :</strong> Code des pensions civiles et militaires · Loi n°2023-270</div>
+      <div class="sim-card-footer">
+        <a href="simulateur_fonctionnaire_capitalisation_guide.html" class="btn btn-purple" target="_blank" style="width:100%;justify-content:center;">
+          ✨ Ouvrir l'Assistant Guidé
+        </a>
+      </div>
+    </div>
+
+    <div class="sim-card expert">
+      <span class="sim-badge">Mode Expert</span>
+      <h3>Mode Expert</h3>
+      <p class="sim-sub">Accès complet : tableau annuel, ETF personnalisé, export PDF, multi-scénarios</p>
+      <ul class="sim-features">
+        <li>Pension SRE (méthode multiplicative, 75% max)</li>
+        <li>Tableau année par année de la carrière projetée</li>
+        <li>ETF personnalisé (rendement et frais modifiables)</li>
+        <li>Comparaison de plusieurs montants d'épargne côte à côte</li>
+        <li>Export PDF séparé (Retraite / Épargne)</li>
+      </ul>
+      <div class="cadre"><strong>Cadre réglementaire :</strong> Décret n°2004-569 (RAFP) · LFSS 2026 (fiscalité)</div>
+      <div class="sim-card-footer">
+        <a href="simulateur_fonctionnaire_capitalisation_expert.html" class="btn btn-cyan" target="_blank" style="width:100%;justify-content:center;">
+          🔧 Ouvrir le Mode Expert
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="features">
+  <h2>Fonctionnalités</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">📊</span>
+      <span class="feature-title">Projection de carrière</span>
+      <span class="feature-desc">Simulation année par année de l'indice majoré et des trimestres, sur 30 à 40 ans — indice constant ou paliers de carrière.</span>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📈</span>
+      <span class="feature-title">Comparateur d'épargne</span>
+      <span class="feature-desc">100% investi sur chaque enveloppe séparément (CTO, PEA, PER) pour comparer directement le net après fiscalité.</span>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">💶</span>
+      <span class="feature-title">Fiscalité 2026 à jour</span>
+      <span class="feature-desc">Flat tax 31,4% (CTO), prélèvements sociaux 18,6% (PEA), fiscalité mixte PER — taux en vigueur depuis la LFSS 2026.</span>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🏦</span>
+      <span class="feature-title">ETF réels vérifiés</span>
+      <span class="feature-desc">ISIN, frais et éligibilité PEA vérifiés pour chaque indice — MSCI World, S&amp;P 500, Émergents, ACWI.</span>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🎯</span>
+      <span class="feature-title">RAFP expliquée</span>
+      <span class="feature-desc">Comprenez pourquoi votre retraite complémentaire est déjà un régime par capitalisation, et ce qu'elle ajoutera.</span>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🔒</span>
+      <span class="feature-title">100% local — vos données restent chez vous</span>
+      <span class="feature-desc">Aucune connexion serveur, aucune donnée envoyée. Fonctionne hors ligne. Compatible tous navigateurs.</span>
+    </div>
+  </div>
+</section>
+
+<div style="background:#f0f4ff;border-top:1px solid #e0e7ff;padding:32px 20px;text-align:center;">
+  <div style="max-width:480px;margin:0 auto;">
+    <h3 style="font-size:1.05rem;color:var(--navy);margin-bottom:8px;">💬 Donnez votre avis</h3>
+    <p style="font-size:.85rem;color:#6b7280;margin-bottom:14px;line-height:1.6;">Cet outil vous a-t-il été utile ? Votre retour nous aide à l'améliorer — 2 minutes suffisent.</p>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSc5FOi5yw2Q5JJ-HZIYRVp9fbYk_D5Q1k1-Lo7Gh06Xk_peBw/viewform" target="_blank"
+       style="display:inline-block;background:var(--navy);color:#fff;font-weight:700;padding:10px 24px;border-radius:8px;text-decoration:none;font-size:.9rem;">
+      💬 Donner mon avis
+    </a>
+  </div>
+</div>
+
+<div style="background:#f9fafb;border-top:1px solid #e5e7eb;padding:40px 20px;text-align:center;">
+  <div style="max-width:480px;margin:0 auto;">
+    <h3 style="font-size:1.1rem;color:var(--navy);margin-bottom:10px;">☕ Soutenir le projet</h3>
+    <p style="font-size:.88rem;color:#6b7280;margin-bottom:18px;line-height:1.6;">Cet outil est développé bénévolement et mis à disposition gratuitement. Si vous le trouvez utile, vous pouvez soutenir son développement avec un petit don — aucune obligation.</p>
+    <a href="https://ko-fi.com/j34nmy" target="_blank"
+       style="display:inline-block;background:#FF5E5B;color:#fff;font-weight:700;padding:12px 28px;border-radius:8px;text-decoration:none;font-size:.95rem;">
+      ☕ Offrir un café sur Ko-fi
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p style="margin-bottom:10px;">
+    Autres simulateurs du même auteur :
+    <a href="https://simulateur-citoyen.fr/simulateur-retraite-progressive/" target="_blank">Retraite Progressive — Fonctionnaire d'État</a> ·
+    <a href="https://simulateur-citoyen.fr/simulateur-retraite-et-epargne-regime-general/" target="_blank">Retraite et Épargne — Régime Général</a> ·
+    <a href="https://simulateur-citoyen.fr/simulateur-impot-per-placement/" target="_blank">Mon Impôt Malin</a> ·
+    <a href="https://simulateur-citoyen.fr/" target="_blank">Voir tous les outils</a>
+  </p>
+  <p>
+    Version V01 · Juillet 2026 ·
+    <a href="https://github.com/J34NMY/simulateur-retraite-et-epargne-fonctionnaire" target="_blank">Code source GitHub</a> ·
+    Licence CC BY-NC-SA 4.0
+  </p>
+  <div class="disclaimer">
+    ⚠️ Outil de <strong>réflexion personnelle</strong> — ne se substitue pas aux outils officiels de l'État.
+    Pour votre estimation officielle, consultez le simulateur M@rel sur
+    <a href="https://www.info-retraite.fr" target="_blank">info-retraite.fr</a>.
+    Co-créé avec <strong>Claude</strong> (Anthropic) — chaque fonctionnalité validée par l'utilisateur avant intégration.
+  </div>
+</footer>
+
+<script data-goatcounter="https://j34nmy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
+

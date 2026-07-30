@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mode d'emploi – Simulateur de Retraite et Épargne, Fonctionnaire</title>
+<style>
+  :root{
+    --navy:#1B3A5C; --or:#b45309; --or-clair:#fff7ed; --bleu:#1e40af; --bleu-clair:#eff6ff;
+    --vert:#15803d; --vert-clair:#f0fdf4; --violet:#6d28d9; --violet-clair:#f5f3ff;
+    --gris-txt:#6b7280; --gris-bord:#e5e7eb; --radius:8px;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;margin:0;background:#f8fafc;color:#0f172a;line-height:1.55;}
+  .hero{background:var(--navy);color:#fff;padding:40px 20px;text-align:center;}
+  .hero h1{margin:0 0 8px;font-size:2rem;}
+  .hero-sub{color:#cbd5e1;max-width:700px;margin:0 auto;font-size:1rem;}
+  .hero-nav{margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .hero-nav a{background:rgba(255,255,255,.12);color:#fff;padding:8px 16px;border-radius:6px;text-decoration:none;font-size:.88rem;}
+  .hero-nav a:hover{background:rgba(255,255,255,.22);}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 20px 60px;}
+  .breadcrumb{max-width:1000px;margin:16px auto 0;padding:0 20px;font-size:.82rem;color:var(--gris-txt);}
+  .breadcrumb a{color:var(--bleu);text-decoration:none;}
+  .layout{display:grid;grid-template-columns:220px 1fr;gap:30px;margin-top:20px;}
+  nav.side{position:sticky;top:20px;align-self:start;font-size:.86rem;}
+  nav.side p{font-weight:700;color:var(--gris-txt);text-transform:uppercase;font-size:.72rem;letter-spacing:.04em;margin:14px 0 6px;}
+  nav.side p:first-child{margin-top:0;}
+  nav.side a{display:block;color:#334155;text-decoration:none;padding:4px 0;}
+  nav.side a.sub{padding-left:12px;font-size:.82rem;color:var(--gris-txt);}
+  nav.side a:hover{color:var(--bleu);}
+  section{margin-bottom:36px;}
+  .section-eyebrow{color:var(--or);font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;margin:0 0 4px;}
+  h2{margin:0 0 14px;font-size:1.5rem;color:var(--navy);}
+  h3{color:var(--bleu);font-size:1.1rem;margin:20px 0 8px;}
+  h4{font-size:.98rem;margin:14px 0 6px;}
+  p{margin:8px 0;}
+  .table-wrap{overflow-x:auto;margin:12px 0;}
+  table{width:100%;border-collapse:collapse;font-size:.86rem;background:#fff;}
+  th,td{padding:9px 10px;border:1px solid var(--gris-bord);text-align:left;}
+  th{background:var(--bleu);color:#fff;}
+  .alert{padding:12px 14px;border-radius:6px;font-size:.88rem;margin:12px 0;}
+  .alert-orange{background:var(--or-clair);border-left:4px solid var(--or);}
+  .alert-blue{background:var(--bleu-clair);border-left:4px solid var(--bleu);}
+  .alert-green{background:var(--vert-clair);border-left:4px solid var(--vert);}
+  .alert-violet{background:var(--violet-clair);border-left:4px solid var(--violet);}
+  .info-card{background:#fff;border:1px solid var(--gris-bord);border-radius:var(--radius);padding:16px;margin:12px 0;}
+  .info-card h4{margin-top:0;}
+  ol,ul{margin:8px 0;padding-left:22px;}
+  li{margin:4px 0;}
+  a{color:var(--bleu);}
+  footer{text-align:center;font-size:.8rem;color:var(--gris-txt);padding:30px 20px;border-top:1px solid var(--gris-bord);background:#fff;}
+  .back-top{display:inline-block;margin-top:6px;font-size:.82rem;}
+  @media (max-width:800px){.layout{grid-template-columns:1fr;}nav.side{position:static;}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Mode d'<em>emploi</em></h1>
+  <p class="hero-sub">Guide complet pour utiliser le simulateur de retraite et épargne fonctionnaire — projection de carrière, comparateur d'épargne, et pourquoi épargner tôt change tout.</p>
+  <div class="hero-nav">
+    <a href="simulateur_fonctionnaire_capitalisation_expert.html">Mode Expert</a>
+    <a href="simulateur_fonctionnaire_capitalisation_guide.html">Mode Guidé</a>
+  </div>
+</div>
+
+<div class="breadcrumb"><a href="index.html">Accueil</a> &rsaquo; Mode d'emploi</div>
+
+<div class="wrap">
+  <div class="layout">
+    <nav class="side">
+      <p>Sur cette page</p>
+      <a href="#demarrage">Démarrage rapide</a>
+      <a href="#perimetre">Qui est concerné ?</a>
+      <p>Paramètres</p>
+      <a href="#identite" class="sub">→ Identité</a>
+      <a href="#carriere" class="sub">→ Carrière</a>
+      <a href="#indice" class="sub">→ Évolution de l'indice</a>
+      <a href="#epargne-params" class="sub">→ Retraite et épargne</a>
+      <p>Résultats</p>
+      <a href="#projection-carriere" class="sub">→ Carrière projetée</a>
+      <a href="#pension" class="sub">→ Pension SRE</a>
+      <a href="#comparateur" class="sub">→ Comparateur d'épargne</a>
+      <p>Avant de commencer</p>
+      <a href="#precaution">Épargne de précaution</a>
+      <p>Références</p>
+      <a href="#rafp">La RAFP</a>
+      <a href="#etf">Les ETF utilisés</a>
+      <a href="#fiscalite">Fiscalité CTO/PEA/PER</a>
+      <a href="#sources">Sources &amp; réglementation</a>
+      <a href="#limites">Limites de l'outil</a>
+    </nav>
+
+    <main>
+      <section id="demarrage">
+        <p class="section-eyebrow">Premiers pas</p>
+        <h2>Démarrage rapide</h2>
+        <ol>
+          <li>Renseignez votre <strong>date de naissance</strong> et votre <strong>sexe</strong></li>
+          <li>Indiquez votre <strong>date de début de carrière</strong>, vos <strong>trimestres déjà validés</strong> (0 si vous débutez), et votre <strong>indice majoré actuel</strong></li>
+          <li>Choisissez une <strong>hypothèse d'évolution de l'indice</strong> (constante ou par paliers)</li>
+          <li>Indiquez votre <strong>montant d'épargne mensuel</strong> et l'<strong>indice/ETF</strong> sur lequel vous comptez investir</li>
+          <li>Cliquez sur <strong>"Calculer ma projection"</strong></li>
+        </ol>
+        <div class="alert alert-orange">&#9888;&#65039; Outil éducatif <strong>NON OFFICIEL</strong>. Toutes les projections sont en <strong>euros constants</strong> (pouvoir d'achat d'aujourd'hui) — pas une promesse de résultat.</div>
+      </section>
+
+      <section id="perimetre">
+        <p class="section-eyebrow">Périmètre</p>
+        <h2>Qui est concerné par cet outil ?</h2>
+        <p>Ce simulateur s'adresse aux <strong>fonctionnaires d'État, catégorie sédentaire</strong>, en <strong>début de carrière</strong>, qui veulent comprendre deux choses : quelle sera leur pension de retraite (méthode SRE), et comment un effort d'épargne personnel (capitalisation) peut la compléter.</p>
+        <div class="alert alert-blue">
+          <strong>Non couvert par cet outil :</strong> les salariés du régime général (voir le simulateur dédié), les fonctionnaires en catégorie active, la CNRACL (territoriaux/hospitaliers), les professions libérales, les travailleurs indépendants.
+        </div>
+      </section>
+
+      <section id="parametres-intro">
+        <p class="section-eyebrow">Saisie</p>
+        <h2>Paramètres de simulation</h2>
+
+        <h3 id="identite">Identité</h3>
+        <p>Votre date de naissance détermine votre génération : âge légal, trimestres requis, âge du taux plein automatique (67 ans).</p>
+
+        <h3 id="carriere">Carrière</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Champ</th><th>Rôle</th></tr></thead>
+          <tbody>
+            <tr><td>Date de début de carrière</td><td>Première validation de trimestres. Si déjà passée, voir l'avertissement ci-dessous.</td></tr>
+            <tr><td>Trimestres déjà validés</td><td>0 si vous débutez. <strong>Sinon, allez récupérer ce chiffre sur votre relevé de carrière, sur info-retraite.fr</strong> — c'est la seule source fiable pour connaître votre situation exacte à ce jour.</td></tr>
+            <tr><td>Indice majoré actuel</td><td>Visible sur votre fiche de paie. Base de la projection de carrière.</td></tr>
+            <tr><td>Valeur du point d'indice</td><td>4,92278€ au 1er juillet 2025 (valeur en vigueur en 2026) — pré-rempli, modifiable si la valeur change.</td></tr>
+          </tbody>
+        </table></div>
+        <div class="alert alert-orange">
+          &#9888;&#65039; <strong>Important :</strong> si votre date de début de carrière est déjà passée, la projection future démarre à partir d'<strong>aujourd'hui</strong>, pas de cette date &mdash; on ne peut pas cotiser ni épargner rétroactivement.
+        </div>
+
+        <h3 id="indice">Évolution de l'indice</h3>
+        <p>Deux hypothèses au choix :</p>
+        <ul>
+          <li><strong>Indice constant</strong> — hypothèse prudente, aucun avancement supplémentaire simulé</li>
+          <li><strong>Paliers de carrière</strong> — progression réaliste via avancements d'échelon et de grade, qui ralentit avec l'âge. Ces taux s'entendent <strong>au-delà de l'inflation</strong>.</li>
+        </ul>
+
+        <h3 id="epargne-params">Retraite et épargne</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Champ</th><th>Rôle</th></tr></thead>
+          <tbody>
+            <tr><td>Date de départ à la retraite</td><td>Calculée automatiquement à l'âge légal de votre génération. Modifiable.</td></tr>
+            <tr><td>Montant épargné par mois</td><td>Le montant que vous comptez investir chaque mois, en plus de votre épargne de précaution.</td></tr>
+            <tr><td>TMI actuelle</td><td>Sert à calculer l'économie d'impôt du PER à l'entrée, et une hypothèse de fiscalité à la sortie.</td></tr>
+            <tr><td>Indice / ETF choisi</td><td>Le même indice est utilisé pour comparer CTO, PEA et PER.</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+      <section id="resultats-intro">
+        <p class="section-eyebrow">Lecture des résultats</p>
+        <h2>Comprendre les résultats</h2>
+
+        <h3 id="projection-carriere">Votre carrière projetée</h3>
+        <p>Simule année par année votre indice et vos trimestres, jusqu'à la retraite (4 trimestres/an, hypothèse réaliste pour un temps plein continu).</p>
+
+        <h3 id="pension">Pension à la retraite (méthode SRE)</h3>
+        <p>Contrairement au régime général (taux plein 50%), la méthode SRE utilise un taux maximum de <strong>75%</strong> du traitement indiciaire, avec une formule <strong>multiplicative</strong> : taux = 75% × (trimestres liquidables ÷ trimestres requis) × (1 − décote), ou majoré si surcote. Décote et surcote : 1,25% par trimestre, comme au régime général. Annulation automatique de la décote à 67 ans, comme au régime général.</p>
+        <div class="alert alert-blue">
+          <strong>Important</strong> : cet outil suppose une carrière <strong>continue à temps plein depuis le début</strong> (trimestres d'assurance = trimestres liquidables). Si vous avez travaillé dans le privé avant d'intégrer la fonction publique, ou connu du temps partiel, utilisez plutôt le <a href="https://simulateur-citoyen.fr/simulateur-retraite-progressive/" target="_blank">simulateur Retraite Progressive Fonctionnaire</a> pour votre pension précise — le comparateur d'épargne de cet outil-ci fonctionne indépendamment de ce calcul, vous pouvez donc reprendre uniquement cette partie avec la même date de retraite.
+        </div>
+
+        <h3 id="comparateur">Comparateur d'épargne : 100% sur chaque enveloppe</h3>
+        <p>L'outil simule <strong>100% du montant sur chaque enveloppe séparément</strong> (CTO, PEA, PER) — pour comparer directement lequel serait le plus avantageux avec la fiscalité 2026.</p>
+      </section>
+
+      <section id="precaution">
+        <p class="section-eyebrow">Avant tout</p>
+        <h2>Épargne de précaution</h2>
+        <div class="alert alert-orange">
+          <strong>Avant d'investir</strong>, constituez une réserve de <strong>3 à 6 mois de vos dépenses courantes</strong>, sur un support <strong>100% liquide et sans risque</strong> (Livret A, LDDS), <strong>jamais</strong> sur des placements boursiers.
+        </div>
+        <p>Son rôle : absorber un imprévu sans jamais avoir à revendre vos placements CTO/PEA/PER au mauvais moment.</p>
+      </section>
+
+      <section id="rafp">
+        <p class="section-eyebrow">Retraite complémentaire</p>
+        <h2>La RAFP &mdash; une capitalisation, déjà</h2>
+        <p>La <strong>RAFP</strong> (Retraite Additionnelle de la Fonction Publique) est un régime obligatoire qui complète votre pension de base. C'est un <strong>vrai régime par capitalisation</strong> (les cotisations sont investies sur les marchés financiers), géré par l'ERAFP — le seul véritable "fonds de pension" français.</p>
+        <ul>
+          <li>Cotisation : 10% (5% agent + 5% employeur), uniquement sur vos <strong>primes et indemnités</strong></li>
+          <li>Plafonnée à 20% de votre traitement indiciaire brut</li>
+          <li>Points acquis chaque année, convertis en rente ou capital à la retraite</li>
+        </ul>
+        <div class="alert alert-orange">&#9888;&#65039; <strong>Non calculé dans cet outil</strong> — les primes sont propres à chaque corps et trop variables pour être généralisées. Un complément RAFP modeste s'ajoutera à votre pension, d'autant plus significatif que vous cotiserez sur une carrière complète (la RAFP n'existe que depuis 2005).</div>
+      </section>
+
+      <section id="etf">
+        <p class="section-eyebrow">Placements</p>
+        <h2>Les ETF utilisés dans le comparateur</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Indice</th><th>ETF de référence</th><th>ISIN</th><th>Frais</th></tr></thead>
+          <tbody>
+            <tr><td>MSCI World</td><td>iShares MSCI World Swap PEA UCITS ETF (WPEA)</td><td>IE0002XZSHO1</td><td>0,25%/an</td></tr>
+            <tr><td>S&amp;P 500</td><td>BNP Paribas Easy S&amp;P 500 UCITS ETF (ESE)</td><td>FR0011550185</td><td>0,14%/an</td></tr>
+            <tr><td>MSCI Emerging Markets</td><td>Amundi PEA Emergent ESG Transition (PAEEM)</td><td>FR0013412020</td><td>0,30%/an</td></tr>
+            <tr><td>MSCI ACWI (monde entier)</td><td>Amundi PEA Global (GPEA)</td><td>FR0014017NX3</td><td>0,30%/an</td></tr>
+          </tbody>
+        </table></div>
+        <p>Tous <strong>éligibles PEA</strong>, donc utilisables aussi bien en CTO qu'en PEA.</p>
+      </section>
+
+      <section id="fiscalite">
+        <p class="section-eyebrow">Fiscalité</p>
+        <h2>CTO, PEA, PER — ce qui change à la sortie</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Enveloppe</th><th>Fiscalité 2026</th></tr></thead>
+          <tbody>
+            <tr><td>CTO</td><td>Flat tax (PFU) de <strong>31,4%</strong> sur les gains</td></tr>
+            <tr><td>PEA (&gt;5 ans)</td><td>Exonéré d'IR — seuls les <strong>18,6%</strong> de prélèvements sociaux</td></tr>
+            <tr><td>PER</td><td>Versements déductibles à l'entrée. À la sortie en capital : versements taxés au barème IR, plus-value au PFU 31,4%</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+      <section id="sources">
+        <p class="section-eyebrow">Références</p>
+        <h2>Sources &amp; réglementation</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Texte</th><th>Objet</th></tr></thead>
+          <tbody>
+            <tr><td>Code des pensions civiles et militaires de retraite</td><td>Calcul de la pension SRE, âge légal, durée d'assurance</td></tr>
+            <tr><td>Loi n°2023-270 du 14 avril 2023</td><td>Réforme des retraites 2023 &mdash; âge légal et trimestres requis par génération</td></tr>
+            <tr><td>Décret n°2004-569 du 18 juin 2004</td><td>Fonctionnement de la RAFP</td></tr>
+            <tr><td>Loi n°2025-1403 du 30/12/2025 (LFSS 2026)</td><td>Hausse de la CSG, PFU à 31,4%</td></tr>
+          </tbody>
+        </table></div>
+        <p style="font-size:.85rem;color:var(--gris-txt);">Pour votre situation personnelle (trimestres exacts, relevé de carrière), rendez-vous sur <a href="https://www.info-retraite.fr" target="_blank">info-retraite.fr</a> — c'est la source officielle unique, tous régimes confondus.</p>
+      </section>
+
+      <section id="limites">
+        <p class="section-eyebrow">Honnêteté méthodologique</p>
+        <h2>Limites de l'outil</h2>
+        <ul>
+          <li>Projections sur 30 à 40 ans — les règles de calcul <strong>changeront</strong> d'ici votre départ réel</li>
+          <li>Suppose une carrière <strong>continue à temps plein</strong> depuis le début (voir encadré RAFP/assurance ci-dessus)</li>
+          <li>La RAFP n'est pas incluse dans le montant de pension affiché</li>
+          <li>Hypothèses de rendement <strong>réel</strong> volontairement prudentes — les performances passées ne préjugent pas des performances futures</li>
+        </ul>
+        <p><a class="back-top" href="#demarrage">&uarr; Retour à l'accueil</a></p>
+      </section>
+    </main>
+  </div>
+</div>
+
+<footer>
+  <strong>Simulateur de Retraite et Épargne &ndash; Fonctionnaire d'État &ndash; V01</strong><br>
+  Développé bénévolement par J34NMY avec l'assistance de Claude (Anthropic)<br><br>
+  Outil éducatif NON OFFICIEL. Pour votre estimation retraite officielle, consultez <a href="https://www.info-retraite.fr" target="_blank">info-retraite.fr</a>. Aucune donnée saisie n'est transmise.
+</footer>
+
+</body>
+</html>
