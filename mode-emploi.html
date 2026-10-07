@@ -74,6 +74,7 @@
       <a href="#perimetre">Qui est concerné ?</a>
       <p>Paramètres</p>
       <a href="#identite" class="sub">→ Identité</a>
+      <a href="#enfants" class="sub">→ Enfants</a>
       <a href="#carriere" class="sub">→ Carrière</a>
       <a href="#indice" class="sub">→ Évolution de l'indice</a>
       <a href="#epargne-params" class="sub">→ Retraite et épargne</a>
@@ -121,6 +122,20 @@
         <h3 id="identite">Identité</h3>
         <p>Votre date de naissance détermine votre génération : âge légal, trimestres requis, âge du taux plein automatique (67 ans).</p>
 
+        <h3 id="enfants">Enfants</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Champ</th><th>Rôle</th></tr></thead>
+          <tbody>
+            <tr><td>Bonification enfants avant 2004</td><td>4 trimestres <strong>liquidables</strong> (comptant dans le montant de la pension) par enfant né ou adopté avant le 1<sup>er</sup> janvier 2004.</td></tr>
+            <tr><td>Majoration enfants depuis 2004</td><td>2 trimestres de <strong>durée d'assurance</strong> par enfant né ou adopté depuis le 1<sup>er</sup> janvier 2004 — ces trimestres aident à atteindre le taux plein (évitent la décote) mais, par défaut, n'augmentent pas directement le montant de la pension.</td></tr>
+            <tr><td>Accouchement(s) après le recrutement</td><td>Case affichée uniquement si la majoration ci-dessus est activée. Depuis le 01/09/2026 (décret n°2026-699), cette condition rend <strong>1 des 2 trimestres liquidable</strong> (il compte alors aussi dans le montant de la pension), pour les femmes ayant accouché après leur recrutement dans la fonction publique. Ne cochez pas pour une adoption ou un accouchement antérieur au recrutement.</td></tr>
+            <tr><td>Total enfants élevés</td><td>Calculé automatiquement (somme des deux champs ci-dessus). À partir de 3 enfants élevés, déclenche la <strong>majoration familiale</strong> (Art. L18 CPCMR) : +10% sur le montant de la pension, +5% par enfant supplémentaire.</td></tr>
+          </tbody>
+        </table></div>
+        <div class="alert alert-green">
+          &#128466;&#65039; <strong>Décret n°2026-699 du 29 juillet 2026</strong> (effectif au 01/09/2026) : pour les femmes fonctionnaires ayant accouché <strong>après leur recrutement</strong>, l'un des 2 trimestres de majoration par enfant né depuis 2004 devient liquidable, c'est-à-dire qu'il compte désormais aussi dans le <strong>montant</strong> de la pension (et non plus seulement dans la durée d'assurance).
+        </div>
+
         <h3 id="carriere">Carrière</h3>
         <div class="table-wrap"><table>
           <thead><tr><th>Champ</th><th>Rôle</th></tr></thead>
@@ -163,6 +178,7 @@
 
         <h3 id="pension">Pension à la retraite (méthode SRE)</h3>
         <p>Contrairement au régime général (taux plein 50%), la méthode SRE utilise un taux maximum de <strong>75%</strong> du traitement indiciaire, avec une formule <strong>multiplicative</strong> : taux = 75% × (trimestres liquidables ÷ trimestres requis) × (1 − décote), ou majoré si surcote. Décote et surcote : 1,25% par trimestre, comme au régime général. Annulation automatique de la décote à 67 ans, comme au régime général.</p>
+        <p>Les trimestres liquidables affichés incluent, le cas échéant, les bonifications/majorations enfants saisies dans l'onglet Identité (voir ci-dessus). L'atteinte du taux plein (pour éviter la décote) se juge sur la <strong>durée d'assurance</strong> (liquidables + majoration enfants depuis 2004 non convertie en liquidable), tandis que le <strong>montant</strong> de la pension ne porte que sur les trimestres liquidables. La majoration familiale (Art. L18, ≥3 enfants élevés) s'applique en dernier, en plus, sur le montant obtenu.</p>
         <div class="alert alert-blue">
           <strong>Important</strong> : cet outil suppose une carrière <strong>continue à temps plein depuis le début</strong> (trimestres d'assurance = trimestres liquidables). Si vous avez travaillé dans le privé avant d'intégrer la fonction publique, ou connu du temps partiel, utilisez plutôt le <a href="https://simulateur-citoyen.fr/simulateur-retraite-progressive/" target="_blank">simulateur Retraite Progressive Fonctionnaire</a> pour votre pension précise — le comparateur d'épargne de cet outil-ci fonctionne indépendamment de ce calcul, vous pouvez donc reprendre uniquement cette partie avec la même date de retraite.
         </div>
@@ -230,6 +246,9 @@
             <tr><td>Loi n°2023-270 du 14 avril 2023</td><td>Réforme des retraites 2023 &mdash; âge légal et trimestres requis par génération</td></tr>
             <tr><td>Décret n°2004-569 du 18 juin 2004</td><td>Fonctionnement de la RAFP</td></tr>
             <tr><td>Loi n°2025-1403 du 30/12/2025 (LFSS 2026)</td><td>Hausse de la CSG, PFU à 31,4%</td></tr>
+            <tr><td>Article L12 bis du CPCMR</td><td>Majoration de durée d'assurance de 2 trimestres par enfant né/adopté depuis 2004</td></tr>
+            <tr><td>Article L18 du CPCMR</td><td>Majoration familiale de pension (+10% à partir de 3 enfants élevés, +5%/enfant supplémentaire)</td></tr>
+            <tr><td>Décret n°2026-699 du 29 juillet 2026</td><td>Depuis le 01/09/2026, rend liquidable 1 des 2 trimestres de majoration par enfant né depuis 2004, pour les femmes ayant accouché après leur recrutement</td></tr>
           </tbody>
         </table></div>
         <p style="font-size:.85rem;color:var(--gris-txt);">Pour votre situation personnelle (trimestres exacts, relevé de carrière), rendez-vous sur <a href="https://www.info-retraite.fr" target="_blank">info-retraite.fr</a> — c'est la source officielle unique, tous régimes confondus.</p>
@@ -243,6 +262,7 @@
           <li>Suppose une carrière <strong>continue à temps plein</strong> depuis le début (voir encadré RAFP/assurance ci-dessus)</li>
           <li>La RAFP n'est pas incluse dans le montant de pension affiché</li>
           <li>Hypothèses de rendement <strong>réel</strong> volontairement prudentes — les performances passées ne préjugent pas des performances futures</li>
+          <li>La <strong>surcote parentale</strong> (dispositif lié au gel 2026 de la réforme des retraites, propre aux situations de retraite progressive/temps partiel avant l'âge légal) n'est <strong>pas modélisée</strong> ici, cet outil supposant une carrière continue à temps plein jusqu'à la date de départ — utilisez le <a href="https://simulateur-citoyen.fr/simulateur-retraite-progressive/" target="_blank">simulateur Retraite Progressive Fonctionnaire</a> si ce cas vous concerne</li>
         </ul>
         <p><a class="back-top" href="#demarrage">&uarr; Retour à l'accueil</a></p>
       </section>

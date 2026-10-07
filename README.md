@@ -26,6 +26,7 @@ Ce simulateur couvre les **fonctionnaires d'État, catégorie sédentaire**, en 
 
 - **Projection de carrière** : 30 à 40 ans, indice constant ou par paliers (avancements d'échelon/grade), en euros constants
 - **Pension à la retraite (méthode SRE)** : taux maximum 75% du traitement indiciaire, formule multiplicative (décote/surcote 1,25%/trimestre), barème de la réforme 2023 (pas le gel temporaire 2026-2028, non pertinent pour une carrière projetée sur 30-40 ans)
+- **Enfants** : bonification 4 trimestres liquidables/enfant (avant 2004), majoration 2 trimestres de durée d'assurance/enfant (depuis 2004, dont 1 devenu liquidable depuis le 01/09/2026 pour les mères ayant accouché après leur recrutement — décret n°2026-699), et majoration familiale de pension +10%/+5% à partir de 3 enfants élevés (Art. L18 CPCMR)
 - **Comparateur d'épargne** : 100% investi sur chaque enveloppe séparément (CTO, PEA, PER), fiscalité 2026 (flat tax 31,4%, PEA 18,6%, PER mixte)
 - **ETF réels vérifiés** (ISIN, frais, éligibilité PEA) pour 4 indices : MSCI World, S&P 500, MSCI Emerging Markets, MSCI ACWI
 - **RAFP expliquée** : encadré pédagogique sur le fonctionnement de la retraite additionnelle (capitalisation collective sur les primes), sans tentative de la chiffrer (primes trop variables selon le corps)
@@ -58,6 +59,7 @@ Cet outil suppose une **carrière continue à temps plein** depuis le début (tr
 - [x] Mode Guidé et Mode Expert
 - [x] Tableau annuel, export PDF, ETF personnalisé, multi-scénarios (Expert)
 - [x] Mise en ligne (GitHub Pages)
+- [x] Enfants : bonifications/majorations, décret n°2026-699, majoration familiale (Art. L18)
 - [ ] Modélisation RAFP chiffrée (si des données de primes moyennes fiables deviennent disponibles)
 
 ---

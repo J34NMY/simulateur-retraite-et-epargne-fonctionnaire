@@ -132,6 +132,39 @@
         <label for="sexe">Sexe</label>
         <select id="sexe"><option value="H">Homme</option><option value="F">Femme</option></select>
       </div>
+      <div style="margin-top:4px;background:#f0f9ff;padding:12px;border-radius:8px;border-left:4px solid #0ea5e9;">
+        <p style="font-weight:700;color:#0369a1;font-size:.9rem;margin-bottom:6px;">Droits liés aux enfants</p>
+        <label style="display:flex;align-items:center;gap:6px;font-weight:400;font-size:.86rem;margin-top:8px;">
+          <input type="checkbox" id="bonifEnfants" style="width:auto;" onchange="toggleBonifEnfants()">
+          <span>Bonification enfants nés/adoptés avant 2004</span>
+        </label>
+        <div class="field" style="margin:8px 0 0;">
+          <label for="enfantsAvant2004" style="font-weight:400;font-size:.82rem;">Nombre d'enfants (avant 2004)</label>
+          <input id="enfantsAvant2004" type="number" min="0" step="1" value="0" disabled style="background-color:#f3f4f6;" oninput="mettreAJourTotalEnfants()" />
+          <small>4 trimestres liquidables/enfant</small>
+        </div>
+        <label style="display:flex;align-items:center;gap:6px;font-weight:400;font-size:.86rem;margin-top:12px;">
+          <input type="checkbox" id="majorationEnfants" style="width:auto;" onchange="toggleMajorationEnfants()">
+          <span>Majoration enfants nés/adoptés à partir de 2004</span>
+        </label>
+        <div class="field" style="margin:8px 0 0;">
+          <label for="enfantsApres2003" style="font-weight:400;font-size:.82rem;">Nombre d'enfants (depuis 2004)</label>
+          <input id="enfantsApres2003" type="number" min="0" step="1" value="0" disabled style="background-color:#f3f4f6;" oninput="mettreAJourTotalEnfants()" />
+          <small>2 trimestres d'assurance/enfant</small>
+        </div>
+        <div id="blocAccouchementRecrutement" style="margin-top:8px;display:none;">
+          <label style="display:flex;align-items:center;gap:6px;font-weight:400;font-size:.86rem;">
+            <input type="checkbox" id="accouchementApresRecrutement" style="width:auto;">
+            <span>Accouchement(s) après le recrutement dans la fonction publique</span>
+          </label>
+          <small style="margin-top:4px;">Depuis le 01/09/2026 (décret n°2026-699), cela ouvre droit en plus à 1 trimestre supplémentaire/enfant compté dans le <strong>montant</strong> de la pension (pas seulement la durée d'assurance). Ne cochez pas pour une adoption ou un accouchement avant le recrutement.</small>
+        </div>
+        <div class="field" style="margin:8px 0 0;">
+          <label for="totalEnfantsEleves" style="font-weight:400;font-size:.82rem;">Total enfants élevés (majoration familiale)</label>
+          <input id="totalEnfantsEleves" type="number" min="0" step="1" value="0" readonly style="background-color:#f3f4f6;cursor:not-allowed;" />
+          <small>+10% si ≥3 enfants, +5% par enfant supplémentaire (Art. L18 CPCMR)</small>
+        </div>
+      </div>
       <div id="err-1" class="validation-error"></div>
     </div>
     <div class="step-nav">
@@ -379,7 +412,8 @@
     return { trimestresTotal, indiceFinal: indiceCourant };
   }
 
-  function calculerPensionSRE(dateNaissance, dateCalcul, trimestresLiquidables, traitementIndiciaire){
+  function calculerPensionSRE(dateNaissance, dateCalcul, trimestresLiquidables, traitementIndiciaire, trimestresAssurance){
+    if(trimestresAssurance === undefined || trimestresAssurance === null) trimestresAssurance = trimestresLiquidables;
     const bareme = trouverBareme(dateNaissance);
     const TR = bareme.trimestresRequis;
     const dateAgeLegal = ajouterMois(dateNaissance, bareme.ageLegalAns*12 + bareme.ageLegalMois);
@@ -387,10 +421,12 @@
     dateTauxPlein.setFullYear(dateTauxPlein.getFullYear() + bareme.ageTauxPlein);
 
     const tauxPleinAuto = dateCalcul >= dateTauxPlein;
+    // Le ratio de liquidation (montant) ne porte que sur les trimestres liquidables.
     const ratioProrata = Math.min(1, trimestresLiquidables / TR);
     let taux, typeCoef, majSurcote=0, trimManquantsAffiche=0;
 
-    if(tauxPleinAuto || trimestresLiquidables >= TR){
+    // L'atteinte du taux plein (decote/surcote) se juge sur la duree d'assurance.
+    if(tauxPleinAuto || trimestresAssurance >= TR){
       typeCoef = 'plein';
       taux = TAUX_MAX_SRE * ratioProrata;
       if(trimestresLiquidables > TR && dateCalcul > dateAgeLegal){
@@ -400,7 +436,7 @@
         typeCoef = 'surcote';
       }
     } else {
-      const trimManquants = TR - trimestresLiquidables;
+      const trimManquants = TR - trimestresAssurance;
       taux = (TAUX_MAX_SRE * ratioProrata) * (1 - trimManquants * TAUX_DECOTE_SURCOTE / 100);
       typeCoef = 'decote';
       trimManquantsAffiche = trimManquants;
@@ -408,6 +444,29 @@
 
     const pensionMensuelle = traitementIndiciaire * (taux/100);
     return { bareme, TR, taux, typeCoef, majSurcote, ratioProrata, pensionMensuelle, trimManquants: trimManquantsAffiche };
+  }
+
+  function toggleBonifEnfants(){
+    const c = document.getElementById('bonifEnfants').checked;
+    const champ = document.getElementById('enfantsAvant2004');
+    champ.disabled = !c;
+    champ.style.backgroundColor = c ? '#fff' : '#f3f4f6';
+    if(!c){ champ.value = '0'; }
+    mettreAJourTotalEnfants();
+  }
+  function toggleMajorationEnfants(){
+    const c = document.getElementById('majorationEnfants').checked;
+    const champ = document.getElementById('enfantsApres2003');
+    champ.disabled = !c;
+    champ.style.backgroundColor = c ? '#fff' : '#f3f4f6';
+    document.getElementById('blocAccouchementRecrutement').style.display = c ? 'block' : 'none';
+    if(!c){ champ.value = '0'; document.getElementById('accouchementApresRecrutement').checked = false; }
+    mettreAJourTotalEnfants();
+  }
+  function mettreAJourTotalEnfants(){
+    const e1 = parseInt(document.getElementById('enfantsAvant2004').value || '0', 10);
+    const e2 = parseInt(document.getElementById('enfantsApres2003').value || '0', 10);
+    document.getElementById('totalEnfantsEleves').value = e1 + e2;
   }
 
   let etapeActuelle = 1;
@@ -456,6 +515,7 @@
     const items=[
       {l:'Date de naissance',v:dn?new Date(dn).toLocaleDateString('fr-FR'):'Manquante'},
       {l:'Sexe',v:document.getElementById('sexe').value==='F'?'Femme':'Homme'},
+      {l:'Enfants élevés',v:document.getElementById('totalEnfantsEleves').value||'0'},
       {l:'Début de carrière',v:ddc?new Date(ddc).toLocaleDateString('fr-FR'):'Manquante'},
       {l:'Trimestres déjà acquis',v:document.getElementById('trimestresDejaAcquis').value||'0'},
       {l:'Indice majoré actuel',v:document.getElementById('indiceActuel').value},
@@ -492,11 +552,28 @@
     const tauxDebut = parseFloat(document.getElementById('tauxDebut').value) || 0;
     const tauxMilieu = parseFloat(document.getElementById('tauxMilieu').value) || 0;
     const tauxFin = parseFloat(document.getElementById('tauxFin').value) || 0;
+    const bonifEnfants = document.getElementById('bonifEnfants').checked;
+    const majorationEnfants = document.getElementById('majorationEnfants').checked;
+    const nbEnfantsAvant2004 = parseInt(document.getElementById('enfantsAvant2004').value) || 0;
+    const nbEnfantsApres2003 = parseInt(document.getElementById('enfantsApres2003').value) || 0;
+    const accouchementApresRecrutement = document.getElementById('accouchementApresRecrutement').checked;
+    const totalEnfantsEleves = parseInt(document.getElementById('totalEnfantsEleves').value) || 0;
 
     const dateAujourdhui = new Date(); dateAujourdhui.setHours(0,0,0,0);
     const proj = projeterCarriere(dateDebutCarriere, dateAujourdhui, trimestresDejaAcquis, indiceActuel, hypothese, tauxDebut, tauxMilieu, tauxFin, dateRetraite);
     const traitementFinal = proj.indiceFinal * valeurPoint;
-    const resPension = calculerPensionSRE(dateNaissance, dateRetraite, proj.trimestresTotal, traitementFinal);
+
+    const bonifEnfantsTr = bonifEnfants ? nbEnfantsAvant2004 * 4 : 0;
+    const majorationApres2003Tr = majorationEnfants ? nbEnfantsApres2003 * 2 : 0;
+    const bonifLiquidableDecretTr = (majorationEnfants && accouchementApresRecrutement) ? nbEnfantsApres2003 * 1 : 0;
+    const trimestresLiquidablesTotal = proj.trimestresTotal + bonifEnfantsTr + bonifLiquidableDecretTr;
+    const trimestresAssuranceTotal = trimestresLiquidablesTotal + Math.max(0, majorationApres2003Tr - bonifLiquidableDecretTr);
+
+    const resPension = calculerPensionSRE(dateNaissance, dateRetraite, trimestresLiquidablesTotal, traitementFinal, trimestresAssuranceTotal);
+
+    let majorationFamiliale = 0;
+    if(totalEnfantsEleves >= 3) majorationFamiliale = 10 + Math.max(0, totalEnfantsEleves - 3) * 5;
+    const pensionAvecMajorationFamiliale = resPension.pensionMensuelle * (1 + majorationFamiliale/100);
 
     const ageDepart = moisEntre(dateNaissance, dateRetraite) / 12;
     const dureeCarriereAns = moisEntre(dateDebutCarriere, dateRetraite) / 12;
@@ -505,9 +582,17 @@
     html += '<h3>Votre carrière projetée</h3>';
     html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">';
     html += '<div style="background:#f8fafc;border-radius:8px;padding:12px;"><p style="font-size:.76rem;color:var(--gris-txt);margin:0 0 4px;">Départ à la retraite</p><p style="font-size:1.1rem;font-weight:600;margin:0;">' + formatDate(dateRetraite) + '</p><p style="font-size:.72rem;color:var(--gris-txt);margin:3px 0 0;">' + ageDepart.toFixed(1) + ' ans, ' + dureeCarriereAns.toFixed(0) + ' ans de carrière</p></div>';
-    html += '<div style="background:#f8fafc;border-radius:8px;padding:12px;"><p style="font-size:.76rem;color:var(--gris-txt);margin:0 0 4px;">Trimestres liquidables</p><p style="font-size:1.1rem;font-weight:600;margin:0;">' + proj.trimestresTotal + ' / ' + resPension.TR + '</p></div>';
+    html += '<div style="background:#f8fafc;border-radius:8px;padding:12px;"><p style="font-size:.76rem;color:var(--gris-txt);margin:0 0 4px;">Trimestres liquidables</p><p style="font-size:1.1rem;font-weight:600;margin:0;">' + trimestresLiquidablesTotal + ' / ' + resPension.TR + '</p></div>';
     html += '<div style="background:#f8fafc;border-radius:8px;padding:12px;"><p style="font-size:.76rem;color:var(--gris-txt);margin:0 0 4px;">Traitement indiciaire final</p><p style="font-size:1.1rem;font-weight:600;margin:0;">' + formatEuro(traitementFinal) + '/mois</p></div>';
     html += '</div></div>';
+
+    if(bonifEnfantsTr > 0 || majorationApres2003Tr > 0){
+      html += '<div class="info" style="margin-top:-4px;">&#8505;&#65039; Dont ' + bonifEnfantsTr + ' trimestre(s) liquidable(s) au titre des enfants nés avant 2004';
+      if(majorationApres2003Tr > 0){
+        html += ', et ' + majorationApres2003Tr + ' trimestre(s) de durée d\'assurance au titre des enfants nés depuis 2004 (' + (bonifLiquidableDecretTr>0 ? 'dont '+bonifLiquidableDecretTr+' trimestre(s) liquidable(s) via le décret n°2026-699' : 'non liquidables, décret n°2026-699 non applicable') + ').';
+      } else { html += '.'; }
+      html += '</div>';
+    }
 
     if(dateDebutCarriere < dateAujourdhui){
       const anneesDejaEcoulees = moisEntre(dateDebutCarriere, dateAujourdhui) / 12;
@@ -528,11 +613,18 @@
     html += '<span style="font-size:26px;font-weight:600;color:#fff;">' + formatEuro(resPension.pensionMensuelle) + '</span></div>';
     html += '</div>';
 
+    if(majorationFamiliale > 0){
+      html += '<div class="info" style="margin-top:10px;background:#f5f3ff;border-left:3px solid #6d28d9;">';
+      html += '<strong style="color:#6d28d9;">Majoration familiale +' + majorationFamiliale + '% (Art. L18 CPCMR, ' + totalEnfantsEleves + ' enfants élevés)</strong><br>';
+      html += 'Pension avec majoration familiale : <strong>' + formatEuro(pensionAvecMajorationFamiliale) + '</strong>/mois.';
+      html += '</div>';
+    }
+
     html += '<div class="warn"><strong>Rappel :</strong> cette projection repose sur des hypothèses à 30-40 ans qui peuvent évoluer d\'ici votre départ réel. La RAFP (retraite complémentaire) n\'est pas incluse &mdash; voir le mode d\'emploi.</div>';
 
     document.getElementById('resultatRetraite').innerHTML = html;
 
-    calculerEpargne(resPension.pensionMensuelle, dureeCarriereAns, dateAujourdhui, dateRetraite);
+    calculerEpargne(pensionAvecMajorationFamiliale, dureeCarriereAns, dateAujourdhui, dateRetraite);
   }
 
   function calculerEpargne(pensionMensuelle, dureeCarriereAns, dateAujourdhui, dateRetraite){
