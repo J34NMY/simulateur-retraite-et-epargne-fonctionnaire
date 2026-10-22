@@ -98,7 +98,7 @@
         <h2>Démarrage rapide</h2>
         <ol>
           <li>Renseignez votre <strong>date de naissance</strong> et votre <strong>sexe</strong></li>
-          <li>Indiquez votre <strong>date de début de carrière</strong>, vos <strong>trimestres déjà validés</strong> (0 si vous débutez), et votre <strong>indice majoré actuel</strong></li>
+          <li>Indiquez votre <strong>date de début de carrière</strong>, vos <strong>trimestres au relevé</strong> (assurance et liquidables, avec les jours résiduels ; 0 si vous débutez), et votre <strong>indice majoré actuel</strong></li>
           <li>Choisissez une <strong>hypothèse d'évolution de l'indice</strong> (constante ou par paliers)</li>
           <li>Indiquez votre <strong>montant d'épargne mensuel</strong> et l'<strong>indice/ETF</strong> sur lequel vous comptez investir</li>
           <li>Cliquez sur <strong>"Calculer ma projection"</strong></li>
@@ -141,13 +141,15 @@
           <thead><tr><th>Champ</th><th>Rôle</th></tr></thead>
           <tbody>
             <tr><td>Date de début de carrière</td><td>Première validation de trimestres. Si déjà passée, voir l'avertissement ci-dessous.</td></tr>
-            <tr><td>Trimestres déjà validés</td><td>0 si vous débutez. <strong>Sinon, allez récupérer ce chiffre sur votre relevé de carrière, sur info-retraite.fr</strong> — c'est la seule source fiable pour connaître votre situation exacte à ce jour.</td></tr>
+            <tr><td>Date du relevé (facultatif)</td><td>Date d'arrêt de votre relevé de carrière (info-retraite.fr). Si vide, la date du jour est utilisée. Elle ne peut pas être dans le futur.</td></tr>
+            <tr><td>Trimestres d'assurance et jours résiduels</td><td>Section « Durée d'assurance » du relevé, à la date du relevé. 0 si vous débutez ; si vide, égale aux trimestres liquidables.</td></tr>
+            <tr><td>Trimestres liquidables et jours résiduels</td><td>Ligne SRE de la section « Mes régimes » du relevé. <strong>Allez récupérer ces chiffres sur info-retraite.fr</strong> — c'est la seule source fiable pour connaître votre situation exacte.</td></tr>
             <tr><td>Indice majoré actuel</td><td>Visible sur votre fiche de paie. Base de la projection de carrière.</td></tr>
             <tr><td>Valeur du point d'indice</td><td>4,92278€ au 1er juillet 2025 (valeur en vigueur en 2026) — pré-rempli, modifiable si la valeur change.</td></tr>
           </tbody>
         </table></div>
         <div class="alert alert-orange">
-          &#9888;&#65039; <strong>Important :</strong> si votre date de début de carrière est déjà passée, la projection future démarre à partir d'<strong>aujourd'hui</strong>, pas de cette date &mdash; on ne peut pas cotiser ni épargner rétroactivement.
+          &#9888;&#65039; <strong>Important :</strong> si votre date de début de carrière est déjà passée, la projection future démarre à la <strong>date de votre relevé</strong> (ou à partir d'<strong>aujourd'hui</strong> si vous ne la renseignez pas), pas de cette date &mdash; on ne peut pas cotiser ni épargner rétroactivement.
         </div>
 
         <h3 id="indice">Évolution de l'indice</h3>
@@ -174,7 +176,7 @@
         <h2>Comprendre les résultats</h2>
 
         <h3 id="projection-carriere">Votre carrière projetée</h3>
-        <p>Simule année par année votre indice et vos trimestres, jusqu'à la retraite (4 trimestres/an, hypothèse réaliste pour un temps plein continu).</p>
+        <p>Simule année par année votre indice, jusqu'à la retraite. Les trimestres sont comptés en jours, comme le fait le SRE : année = 360 jours, trimestre = 90 jours, à partir de votre relevé (assurance : trimestres entiers ; liquidables : arrondi au trimestre le plus proche à partir de 45 jours), pour un temps plein continu.</p>
 
         <h3 id="pension">Pension à la retraite (méthode SRE)</h3>
         <p>Contrairement au régime général (taux plein 50%), la méthode SRE utilise un taux maximum de <strong>75%</strong> du traitement indiciaire, avec une formule <strong>multiplicative</strong> : taux = 75% × (trimestres liquidables ÷ trimestres requis) × (1 − décote), ou majoré si surcote. Décote et surcote : 1,25% par trimestre, comme au régime général. Annulation automatique de la décote à 67 ans, comme au régime général.</p>

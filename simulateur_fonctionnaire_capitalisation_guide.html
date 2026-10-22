@@ -183,12 +183,30 @@
       <div class="field">
         <label for="dateDebutCarriere">Date de début de carrière (ou déjà en cours)</label>
         <input type="date" id="dateDebutCarriere" />
-        <small>Si cette date est déjà passée, la projection future démarre à partir d'aujourd'hui, pas de cette date.</small>
+        <small>Si cette date est déjà passée, la projection future démarre à la date du relevé (ou aujourd'hui), pas de cette date.</small>
       </div>
       <div class="field">
-        <label for="trimestresDejaAcquis">Trimestres déjà validés à ce jour</label>
-        <input type="number" id="trimestresDejaAcquis" min="0" max="220" step="1" value="0" />
-        <small>0 si vous débutez. Sinon, sur votre relevé de carrière (info-retraite.fr).</small>
+        <label for="dateReleve">Date du relevé de carrière (facultatif)</label>
+        <input type="date" id="dateReleve" />
+        <small>Date d'arrêt de votre relevé (info-retraite.fr). Si vide, la date du jour est utilisée. Les trimestres ci-dessous sont ceux à cette date. Elle ne peut pas être dans le futur.</small>
+      </div>
+      <div class="field">
+        <label for="trimAssuranceReleve">Trimestres d'assurance au relevé</label>
+        <input type="number" id="trimAssuranceReleve" min="0" max="220" step="1" value="0" />
+        <small>Section « Durée d'assurance » du relevé. 0 si vous débutez ; si vide, égale aux liquidables.</small>
+      </div>
+      <div class="field">
+        <label for="joursAssuranceReleve">Jours résiduels (assurance)</label>
+        <input type="number" id="joursAssuranceReleve" min="0" max="89" step="1" value="0" />
+      </div>
+      <div class="field">
+        <label for="trimLiquidablesReleve">Trimestres liquidables au relevé</label>
+        <input type="number" id="trimLiquidablesReleve" min="0" max="220" step="1" value="0" />
+        <small>Ligne SRE de la section « Mes régimes » du relevé. 0 si vous débutez.</small>
+      </div>
+      <div class="field">
+        <label for="joursLiquidablesReleve">Jours résiduels (liquidables)</label>
+        <input type="number" id="joursLiquidablesReleve" min="0" max="89" step="1" value="0" />
       </div>
       <div class="field">
         <label for="indiceActuel">Indice majoré actuel</label>
@@ -395,10 +413,33 @@
     document.getElementById('palierDetails').style.display = (val==='paliers') ? 'block' : 'none';
   }
 
-  function projeterCarriere(dateDebutCarriere, dateReference, trimestresDejaAcquis, indiceActuel, hypothese, tauxDebut, tauxMilieu, tauxFin, dateRetraite){
+
+  // --- Comptage des services SRE (meme base que le simulateur Retraite Progressive Fonctionnaire) ---
+  // Convention : annee = 360 jours, mois = 30 jours, trimestre = 90 jours. Trimestres d'assurance : arrondi inferieur ;
+  // trimestres liquidables : arrondi au trimestre le plus proche (a partir de 45 jours).
+  function arrondirTrimestresLiquidables(j){ const t = Math.floor(j/90); return t + (j%90 >= 45 ? 1 : 0); }
+  function calculerPeriodesServiceSRE(d1, d2){
+    if(!(d1 instanceof Date) || !(d2 instanceof Date) || isNaN(d1) || isNaN(d2)) return 0;
+    let a = d2.getFullYear()-d1.getFullYear(), m = d2.getMonth()-d1.getMonth(), j = d2.getDate()-d1.getDate();
+    if(j<0){ m--; j+=30; }
+    if(m<0){ a--; m+=12; }
+    return Math.max(0, a*360 + m*30 + j);
+  }
+  // Lit le releve : trimestres + jours residuels (assurance et liquidables), convertis en jours.
+  // Si l'assurance n'est pas renseignee, elle est egale aux liquidables (carriere continue a temps plein).
+  function lireReleveSRE(){
+    const g = id => Math.max(0, parseInt(document.getElementById(id).value) || 0);
+    let jAR = g('trimAssuranceReleve')*90 + Math.min(89, g('joursAssuranceReleve'));
+    const jLR = g('trimLiquidablesReleve')*90 + Math.min(89, g('joursLiquidablesReleve'));
+    if(jAR === 0 && jLR > 0) jAR = jLR;
+    return { jAR: jAR, jLR: jLR };
+  }
+
+  function projeterCarriere(dateDebutCarriere, dateReference, releve, indiceActuel, hypothese, tauxDebut, tauxMilieu, tauxFin, dateRetraite){
     const anneeDebut = dateDebutCarriere.getFullYear();
     const anneeRetraite = dateRetraite.getFullYear();
-    let trimestresTotal = trimestresDejaAcquis;
+    // Services de la periode projetee (jours, convention 360/30/90), du releve jusqu'au depart
+    const joursServices = calculerPeriodesServiceSRE(dateReference, dateRetraite);
     let indiceCourant = indiceActuel;
     const anneeDepart = Math.max(anneeDebut, dateReference.getFullYear());
 
@@ -413,10 +454,9 @@
         else tauxCroissance = tauxFin;
       }
       if(annee > anneeDepart) indiceCourant *= (1 + tauxCroissance/100);
-      trimestresTotal += 4;
     }
 
-    return { trimestresTotal, indiceFinal: indiceCourant };
+    return { joursServices, trimestresTotal: arrondirTrimestresLiquidables(releve.jLR + joursServices), indiceFinal: indiceCourant };
   }
 
   function calculerPensionSRE(dateNaissance, dateCalcul, trimestresLiquidables, traitementIndiciaire, trimestresAssurance){
@@ -513,6 +553,8 @@
     err.classList.remove('show');
     if(n===1 && !document.getElementById('dateNaissance').value){ err.textContent='Date de naissance obligatoire.'; err.classList.add('show'); return false; }
     if(n===2){
+      const drG=document.getElementById('dateReleve').value;
+      if(drG && new Date(drG) > new Date()){ err.textContent='La date du relevé ne peut pas être dans le futur.'; err.classList.add('show'); return false; }
       if(!document.getElementById('dateDebutCarriere').value){ err.textContent='Date de début de carrière obligatoire.'; err.classList.add('show'); return false; }
       if(!document.getElementById('indiceActuel').value){ err.textContent='Indice majoré actuel obligatoire.'; err.classList.add('show'); return false; }
     }
@@ -533,7 +575,9 @@
       {l:'Sexe',v:document.getElementById('sexe').value==='F'?'Femme':'Homme'},
       {l:'Enfants élevés',v:document.getElementById('totalEnfantsEleves').value||'0'},
       {l:'Début de carrière',v:ddc?new Date(ddc).toLocaleDateString('fr-FR'):'Manquante'},
-      {l:'Trimestres déjà acquis',v:document.getElementById('trimestresDejaAcquis').value||'0'},
+      {l:'Date du relevé',v:document.getElementById('dateReleve').value?new Date(document.getElementById('dateReleve').value).toLocaleDateString('fr-FR'):'Date du jour'},
+      {l:'Assurance au relevé',v:(document.getElementById('trimAssuranceReleve').value||'0')+' trim. '+(document.getElementById('joursAssuranceReleve').value||'0')+' j'},
+      {l:'Liquidables au relevé',v:(document.getElementById('trimLiquidablesReleve').value||'0')+' trim. '+(document.getElementById('joursLiquidablesReleve').value||'0')+' j'},
       {l:'Indice majoré actuel',v:document.getElementById('indiceActuel').value},
       {l:'Évolution de l\'indice',v:hyp==='constant'?'Constante':'Paliers de carrière'},
       {l:'Départ à la retraite',v:ddr?new Date(ddr).toLocaleDateString('fr-FR'):'Manquante'},
@@ -561,7 +605,7 @@
     const dateNaissance = new Date(document.getElementById('dateNaissance').value);
     const dateDebutCarriere = new Date(document.getElementById('dateDebutCarriere').value);
     const dateRetraite = new Date(document.getElementById('dateDepartRetraite').value);
-    const trimestresDejaAcquis = parseInt(document.getElementById('trimestresDejaAcquis').value) || 0;
+    const releve = lireReleveSRE();
     const indiceActuel = parseFloat(document.getElementById('indiceActuel').value) || 0;
     const valeurPoint = parseFloat(document.getElementById('valeurPoint').value) || 0;
     const hypothese = document.querySelector('input[name="hypotheseIndice"]:checked').value;
@@ -576,14 +620,17 @@
     const totalEnfantsEleves = parseInt(document.getElementById('totalEnfantsEleves').value) || 0;
 
     const dateAujourdhui = new Date(); dateAujourdhui.setHours(0,0,0,0);
-    const proj = projeterCarriere(dateDebutCarriere, dateAujourdhui, trimestresDejaAcquis, indiceActuel, hypothese, tauxDebut, tauxMilieu, tauxFin, dateRetraite);
+    const dateReleveSaisie = document.getElementById('dateReleve').value;
+    const dateReference = dateReleveSaisie ? new Date(dateReleveSaisie) : dateAujourdhui;
+    const proj = projeterCarriere(dateDebutCarriere, dateReference, releve, indiceActuel, hypothese, tauxDebut, tauxMilieu, tauxFin, dateRetraite);
     const traitementFinal = proj.indiceFinal * valeurPoint;
 
     const bonifEnfantsTr = bonifEnfants ? nbEnfantsAvant2004 * 4 : 0;
     const majorationApres2003Tr = majorationEnfants ? nbEnfantsApres2003 * 2 : 0;
     const bonifLiquidableDecretTr = (majorationEnfants && accouchementApresRecrutement) ? nbEnfantsApres2003 * 1 : 0;
-    const trimestresLiquidablesTotal = proj.trimestresTotal + bonifEnfantsTr + bonifLiquidableDecretTr;
-    const trimestresAssuranceTotal = trimestresLiquidablesTotal + Math.max(0, majorationApres2003Tr - bonifLiquidableDecretTr);
+    // Comptage en jours (90 jours = 1 trimestre), comme le simulateur Retraite Progressive Fonctionnaire
+    const trimestresLiquidablesTotal = arrondirTrimestresLiquidables(releve.jLR + proj.joursServices + (bonifEnfantsTr + bonifLiquidableDecretTr)*90);
+    const trimestresAssuranceTotal = Math.floor((releve.jAR + proj.joursServices + (bonifEnfantsTr + majorationApres2003Tr)*90)/90);
 
     const resPension = calculerPensionSRE(dateNaissance, dateRetraite, trimestresLiquidablesTotal, traitementFinal, trimestresAssuranceTotal);
 
@@ -612,7 +659,7 @@
 
     if(dateDebutCarriere < dateAujourdhui){
       const anneesDejaEcoulees = moisEntre(dateDebutCarriere, dateAujourdhui) / 12;
-      html += '<div class="info" style="margin-top:-4px;">&#8505;&#65039; Votre carrière a débuté il y a ' + anneesDejaEcoulees.toFixed(1) + ' an(s). Cette projection calcule le futur à partir d\'aujourd\'hui, pas de votre date de début de carrière.</div>';
+      html += '<div class="info" style="margin-top:-4px;">&#8505;&#65039; Votre carrière a débuté il y a ' + anneesDejaEcoulees.toFixed(1) + ' an(s). Cette projection calcule le futur à partir ' + (dateReleveSaisie ? 'de la date de votre relevé (' + formatDate(dateReference) + ')' : 'd\'aujourd\'hui') + ', pas de votre date de début de carrière.</div>';
     }
 
     html += '<div class="result-section">';

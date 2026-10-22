@@ -40,7 +40,7 @@ Ce simulateur couvre les **fonctionnaires d'État, catégorie sédentaire**, en 
 
 1. Rendez-vous sur [simulateur-citoyen.fr/simulateur-retraite-et-epargne-fonctionnaire](https://simulateur-citoyen.fr/simulateur-retraite-et-epargne-fonctionnaire/)
 2. Choisissez le **Mode Guidé** (première utilisation) ou le **Mode Expert** (fonctionnalités avancées)
-3. Si vous avez déjà des trimestres validés, récupérez-les sur votre relevé de carrière ([info-retraite.fr](https://www.info-retraite.fr))
+3. Si vous avez déjà des trimestres validés, récupérez-les sur votre relevé de carrière ([info-retraite.fr](https://www.info-retraite.fr)) : date du relevé, trimestres d'assurance et liquidables avec leurs jours résiduels (comptage en jours, trimestre = 90 jours, comme le simulateur Retraite Progressive Fonctionnaire)
 4. Consultez le [Mode d'emploi](mode-emploi.html) pour un guide détaillé
 
 ---
