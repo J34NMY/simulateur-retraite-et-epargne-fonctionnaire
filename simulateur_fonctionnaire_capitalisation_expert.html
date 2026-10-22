@@ -367,16 +367,62 @@
   }
 
   // ============================================
-  // BAREME REFORME 2023 (applicable a long terme, pas le gel temporaire 2026-2028)
+  // BAREME : reforme 2023 a long terme, gel temporaire 2026-2028 pris en compte selon la date d effet
   // ============================================
-  const baremeGenerations = [
-    { debut:'1958-01-01', fin:'1960-12-31', ageLegalAns:62, ageLegalMois:0, trimestresRequis:167, ageTauxPlein:67 },
-    { debut:'1961-01-01', fin:'1961-12-31', ageLegalAns:62, ageLegalMois:3, trimestresRequis:168, ageTauxPlein:67 },
-    { debut:'1962-01-01', fin:'1962-12-31', ageLegalAns:62, ageLegalMois:6, trimestresRequis:169, ageTauxPlein:67 },
-    { debut:'1963-01-01', fin:'1963-12-31', ageLegalAns:62, ageLegalMois:9, trimestresRequis:170, ageTauxPlein:67 },
-    { debut:'1964-01-01', fin:'1964-12-31', ageLegalAns:63, ageLegalMois:0, trimestresRequis:171, ageTauxPlein:67 },
-    { debut:'1965-01-01', fin:'2100-12-31', ageLegalAns:64, ageLegalMois:0, trimestresRequis:172, ageTauxPlein:67 }
+  // Regime applicable selon la date d'effet de la retraite (meme logique que le simulateur Retraite Progressive Fonctionnaire) :
+  //  - avant le 01/09/2026 : reforme de septembre 2023 ;
+  //  - du 01/09/2026 au 01/01/2028 : gel 2026 (LFSS 2026, art. 105) ;
+  //  - apres le 01/01/2028 : retour a la reforme 2023 (le gel est temporaire).
+  const DATE_GEL_2026_DEBUT = new Date('2026-09-01');
+  const DATE_GEL_2026_FIN = new Date('2028-01-01');
+  const trimestresParAnnee_Gel2026 = [
+    {min:1958,max:1960,trimestres:168},{min:1961,max:1962,trimestres:169},
+    {min:1963,max:1965,trimestres:170},{min:1966,max:1966,trimestres:171},
+    {min:1967,max:1967,trimestres:171},{min:1968,max:2100,trimestres:172}
   ];
+  const trimestresParAnnee_Sept2023 = [
+    {min:1958,max:1960,trimestres:167},{min:1961,max:1961,trimestres:168},
+    {min:1962,max:1962,trimestres:169},{min:1963,max:1963,trimestres:170},
+    {min:1964,max:1964,trimestres:171},{min:1965,max:2100,trimestres:172}
+  ];
+  function determinerRegime(d){
+    if(!(d instanceof Date) || isNaN(d)) return 'sept2023';
+    return (d >= DATE_GEL_2026_DEBUT && d <= DATE_GEL_2026_FIN) ? 'gel2026' : 'sept2023';
+  }
+  function trimestresRequisSRE(dateNaissance, regime){
+    const a = dateNaissance.getFullYear();
+    const table = regime === 'gel2026' ? trimestresParAnnee_Gel2026 : trimestresParAnnee_Sept2023;
+    for(const r of table) if(a >= r.min && a <= r.max) return r.trimestres;
+    return 172;
+  }
+  // Age legal (= age d'ouverture de la surcote), en annees decimales
+  function ageLegalSRE(dn, regime){
+    const a = dn.getFullYear(), m = dn.getMonth();
+    if(a < 1961 || (a === 1961 && m < 8)) return 62;
+    if(a === 1961) return 62.25;
+    if(regime === 'sept2023'){
+      const tS = {1962:62.5,1963:62.75,1964:63,1965:63.25,1966:63.5,1967:63.75};
+      if(a >= 1968) return 64;
+      return tS[a] || 62;
+    }
+    const t = {1962:62.5,1963:62.75,1964:62.75,1965:62.75,1966:63.25,1967:63.5};
+    if(a === 1965 && m >= 3) return 63.0;
+    if(a >= 1968) return 64;
+    return t[a] || 62;
+  }
+  // Surcote parentale (meme regles que le simulateur Retraite Progressive Fonctionnaire)
+  function surcoteParentaleSRE(dn, TR, assurance, bTr, mTr, quotite, regime){
+    const a = dn.getFullYear(), m = dn.getMonth();
+    if(a < 1964) return { applicable:false };
+    if(regime !== 'sept2023'){
+      if(a === 1964) return { applicable:false };
+      if(a === 1965 && m < 3) return { applicable:false };
+    }
+    if(bTr + mTr < 1 || assurance < TR) return { applicable:false };
+    const retenus = Math.min(4, Math.floor(quotite*4));
+    if(retenus <= 0) return { applicable:false };
+    return { applicable:true, tauxSurcote: retenus*1.25, trimestresRetenus: retenus };
+  }
 
   const TAUX_MAX_SRE = 75; // % maximum, contre 50% au regime general
   const TAUX_DECOTE_SURCOTE = 1.25; // %/trimestre, methode SRE (multiplicative)
@@ -391,12 +437,11 @@
   };
   const FRAIS_GESTION_PER = 0.006;
 
-  function trouverBareme(dateNaissance){
-    const dnStr = dateNaissance.toISOString().slice(0,10);
-    for(const b of baremeGenerations){
-      if(dnStr >= b.debut && dnStr <= b.fin) return b;
-    }
-    return { ageLegalAns:64, ageLegalMois:0, trimestresRequis:172, ageTauxPlein:67 };
+  // Bareme (age legal, trimestres requis) selon la generation ET la date d'effet de la retraite
+  function trouverBareme(dateNaissance, dateEffet){
+    const regime = determinerRegime(dateEffet);
+    const mois = Math.round(ageLegalSRE(dateNaissance, regime) * 12);
+    return { ageLegalAns: Math.floor(mois/12), ageLegalMois: mois % 12, trimestresRequis: trimestresRequisSRE(dateNaissance, regime), ageTauxPlein: 67, regime: regime };
   }
   function ajouterMois(date, mois){
     const d = new Date(date);
@@ -467,8 +512,11 @@
     const dnVal = document.getElementById('dateNaissance').value;
     if(!dnVal) return;
     const dateNaissance = new Date(dnVal);
-    const bareme = trouverBareme(dateNaissance);
-    const dateAgeLegal = ajouterMois(dateNaissance, bareme.ageLegalAns*12 + bareme.ageLegalMois);
+    // Age legal selon le regime applicable a la date obtenue (reforme 2023 ou gel 2026)
+    let bareme = trouverBareme(dateNaissance, new Date('2000-01-01'));
+    let dateAgeLegal = ajouterMois(dateNaissance, bareme.ageLegalAns*12 + bareme.ageLegalMois);
+    bareme = trouverBareme(dateNaissance, dateAgeLegal);
+    dateAgeLegal = ajouterMois(dateNaissance, bareme.ageLegalAns*12 + bareme.ageLegalMois);
     document.getElementById('dateDepartRetraite').value = dateAgeLegal.toISOString().slice(0,10);
   }
 
@@ -526,40 +574,53 @@
   // ============================================
   // PENSION SRE (methode multiplicative, 75% max)
   // ============================================
-  function calculerPensionSRE(dateNaissance, dateCalcul, trimestresLiquidables, traitementIndiciaire, trimestresAssurance){
+  function calculerPensionSRE(dateNaissance, dateCalcul, trimestresLiquidables, traitementIndiciaire, trimestresAssurance, enfants){
     if(trimestresAssurance === undefined || trimestresAssurance === null) trimestresAssurance = trimestresLiquidables;
-    const bareme = trouverBareme(dateNaissance);
+    enfants = enfants || { bonifTr:0, majTr:0 };
+    const regime = determinerRegime(dateCalcul);
+    const bareme = trouverBareme(dateNaissance, dateCalcul);
     const TR = bareme.trimestresRequis;
-    const dateAgeLegal = ajouterMois(dateNaissance, bareme.ageLegalAns*12 + bareme.ageLegalMois);
     const dateTauxPlein = new Date(dateNaissance);
     dateTauxPlein.setFullYear(dateTauxPlein.getFullYear() + bareme.ageTauxPlein);
 
     const tauxPleinAuto = dateCalcul >= dateTauxPlein;
-    // Le ratio de liquidation (montant de la pension) ne porte QUE sur les trimestres liquidables.
+    // Le ratio de liquidation (montant) ne porte que sur les trimestres liquidables.
     const ratioProrata = Math.min(1, trimestresLiquidables / TR);
-    let taux, typeCoef, majSurcote=0;
+    let taux, typeCoef, majSurcote = 0, trimManquantsAffiche = 0;
 
-    // L'atteinte du taux plein (decote/surcote) se juge sur la DUREE D'ASSURANCE,
-    // qui peut depasser les trimestres liquidables (ex: majoration enfants nee apres 2003,
-    // comptee en duree d'assurance mais pas dans le montant - sauf decret n°2026-699).
+    // L'atteinte du taux plein (decote/surcote) se juge sur la duree d'assurance.
     if(tauxPleinAuto || trimestresAssurance >= TR){
       typeCoef = 'plein';
       taux = TAUX_MAX_SRE * ratioProrata;
-      if(trimestresLiquidables > TR && dateCalcul > dateAgeLegal){
-        const trimSurcote = trimestresLiquidables - TR;
-        majSurcote = trimSurcote * TAUX_DECOTE_SURCOTE;
-        taux = TAUX_MAX_SRE * (1 + majSurcote/100);
-        typeCoef = 'surcote';
+      if(trimestresAssurance >= TR){
+        const ageD = (dateCalcul - dateNaissance) / (1000*60*60*24*365.25);
+        const ageSR = ageLegalSRE(dateNaissance, regime);
+        let tSC = 0, tSP = 0, tME = 0;
+        let excRest = Math.max(0, trimestresAssurance - TR);
+        const sp = surcoteParentaleSRE(dateNaissance, TR, trimestresAssurance, enfants.bonifTr, enfants.majTr, 1, regime);
+        if(sp.applicable){ tSP = sp.tauxSurcote; excRest = Math.max(0, excRest - sp.trimestresRetenus); }
+        if(ageD >= ageSR){
+          const trimSC = Math.floor((Math.min(ageD, 70) - ageSR) * 4);
+          if(trimSC > 0){ tSC = trimSC * TAUX_DECOTE_SURCOTE; excRest = Math.max(0, excRest - trimSC); }
+        }
+        // Majoration des trimestres excedentaires : suspendue sous le gel 2026, active sous la reforme 2023
+        if(regime === 'sept2023' && excRest > 0) tME = excRest * TAUX_DECOTE_SURCOTE;
+        majSurcote = tSC + tSP + tME;
+        if(majSurcote > 0){
+          taux = TAUX_MAX_SRE * ratioProrata * (1 + majSurcote/100);
+          typeCoef = 'surcote';
+        }
       }
     } else {
       const trimManquants = TR - trimestresAssurance;
       taux = (TAUX_MAX_SRE * ratioProrata) * (1 - trimManquants * TAUX_DECOTE_SURCOTE / 100);
       typeCoef = 'decote';
-      var trimManquantsAffiche = trimManquants;
+      trimManquantsAffiche = trimManquants;
     }
 
-    const pensionMensuelle = traitementIndiciaire * (taux/100);
-    return { bareme, TR, taux, typeCoef, majSurcote, ratioProrata, pensionMensuelle, trimManquants: typeof trimManquantsAffiche!=='undefined'?trimManquantsAffiche:0 };
+    // Plafond : la pension ne peut pas depasser le traitement de reference (art. L13 CPCMR)
+    const pensionMensuelle = Math.min(traitementIndiciaire * (taux/100), traitementIndiciaire);
+    return { bareme, TR, taux, typeCoef, majSurcote, ratioProrata, pensionMensuelle, trimManquants: trimManquantsAffiche };
   }
 
   let etapeActuelleInutilise = null; // reserve

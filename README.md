@@ -25,7 +25,7 @@ Ce simulateur couvre les **fonctionnaires d'État, catégorie sédentaire**, en 
 ## ✨ Fonctionnalités
 
 - **Projection de carrière** : 30 à 40 ans, indice constant ou par paliers (avancements d'échelon/grade), en euros constants
-- **Pension à la retraite (méthode SRE)** : taux maximum 75% du traitement indiciaire, formule multiplicative (décote/surcote 1,25%/trimestre), barème de la réforme 2023 (pas le gel temporaire 2026-2028, non pertinent pour une carrière projetée sur 30-40 ans)
+- **Pension à la retraite (méthode SRE)** : taux maximum 75% du traitement indiciaire, formule multiplicative (décote/surcote 1,25%/trimestre), barème de la réforme 2023, avec le gel 2026 (LFSS 2026, art. 105) appliqué pour les départs du 01/09/2026 au 01/01/2028 ; surcote calculée à partir de l'âge légal (1,25 % par trimestre, comme le simulateur Retraite Progressive Fonctionnaire)
 - **Enfants** : bonification 4 trimestres liquidables/enfant (avant 2004), majoration 2 trimestres de durée d'assurance/enfant (depuis 2004, dont 1 devenu liquidable depuis le 01/09/2026 pour les mères ayant accouché après leur recrutement — décret n°2026-699), et majoration familiale de pension +10%/+5% à partir de 3 enfants élevés (Art. L18 CPCMR)
 - **Comparateur d'épargne** : 100% investi sur chaque enveloppe séparément (CTO, PEA, PER), fiscalité 2026 (flat tax 31,4%, PEA 18,6%, PER mixte)
 - **ETF réels vérifiés** (ISIN, frais, éligibilité PEA) pour 4 indices : MSCI World, S&P 500, MSCI Emerging Markets, MSCI ACWI
@@ -53,7 +53,7 @@ Cet outil suppose une **carrière continue à temps plein** depuis le début (tr
 
 ## 🗺️ Feuille de route
 
-- [x] Moteur de calcul SRE (méthode multiplicative, 75% max, barème réforme 2023)
+- [x] Moteur de calcul SRE (méthode multiplicative, 75% max, barème réforme 2023 + gel 2026, surcote à partir de l'âge légal)
 - [x] Comparateur d'épargne CTO/PEA/PER avec fiscalité 2026
 - [x] ETF réels vérifiés individuellement (ISIN, TER)
 - [x] Mode Guidé et Mode Expert
